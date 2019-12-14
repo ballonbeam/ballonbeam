@@ -1,10 +1,7 @@
 # MECA 482 Control Systems Final Project
 
 ## Team Members
-Thomas Allen: Mechanical Engineer 
-Aaron Fisher: Mechatronic Engineer 
-Kate Gordon: Mechanical Engineer 
-Stuart Matthews: Mechatronic Engineer 
+Thomas Allen: Mechanical Engineer<br/>Aaron Fisher: Mechatronic Engineer<br/>Kate Gordon: Mechanical Engineer<br/>Stuart Matthews: Mechatronic Engineer
 
 
 ### Introduction
