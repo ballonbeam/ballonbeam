@@ -76,8 +76,84 @@ The transfer function for this circuit shows the relationship between the rotati
    In order to correctly simulate this project, simulink files were also required. Simulink is a graphical representation of the transfer function and control loops. These simulations were then required to be linked with vrep, a modeling software that creates simulated results of a physical system. The first simulink file, as seen in Figure 11, shows the mathematical model of the transfer function and control loop. 
    
    ![Fig 11](https://user-images.githubusercontent.com/58873673/71421257-9a760b80-262e-11ea-9c07-dddd21d84820.png)
-    
+   Figure 11: Simulink of transfer function control loop
+   
+   The second simulink simulation that was created represents the forces and geometric constraints of the real system. However, to model all of the forces can be difficult, so an equation of motion was used directly in the model. This can be seen in figure 12.
+   
+   ![Fig 12](https://user-images.githubusercontent.com/58873673/71421324-08223780-262f-11ea-9b5f-5515c4c17454.png)
+   Figure 12: Simulink model of the system 
+   
+### VREP
+  The model built in Vrep is a direct representation of the model that would be built physically. By applying joints, sensors and API’s the model can move directly, simulating real world results with the simulink representations built. Figure 13 shows the model created in Vrep, with the red cylindrical shapes representing the joints of the ball and beam balancer. The small red dot at the end of the balancer simulated the proximity sensor that gives the model feedback. The lever arm was built in vrep to the specifications that were set in the matlab simulation, keeping all the dimensions the same. 
 
+  ![Fig 13](https://user-images.githubusercontent.com/58873673/71421364-43246b00-262f-11ea-9716-6de68fb1f7b3.PNG)
+  
+  To correctly simulate the results in vrep, the sensors, joints and shapes had to be placed in the hierarchy tree in a specific order. This hierarchy correlates the motion to the desired parts and simulates the behavior as it would react in the real world. This breakdown can be seen in Figure 14. The tree is expanded in the figure to show the parent shapes were built first. After the simple shape model was created the joints were implemented as children along with the sensors. The last added components were the two dummies added at the top and bottom of the hierarchy tree. These two dummies were linked to make the model all linked as a structure similar to a feedback system. The entire working model can be found as an attached file.
+
+  ![Fig 14](https://user-images.githubusercontent.com/58873673/71421403-6c44fb80-262f-11ea-9a12-1f58344619c3.PNG)
+  
+  
+### Conclusion
+  The ball and beam model proved to be a basic representation of a control system. After studying the behaviors and feedback of a simulation, the physical model implementation becomes far easier. 
+
+
+### Appended Notes
+  While building this model the team wanted to document the process for linking programs together to simulate in real time. There were three separate programs used to simulate the overall system: Matlab, Simulink, and Vrep. Matlab was used to generate the transfer function and step response of the plant. Simulink was used to model the feedback and control loop of the system. Lastly Vrep was used to model the entire system. 
+In order to simulate, the model in vrep with sensors must be interfaced with matlab to calculate the real time sensors and output. Along with matlab, simulink also must be interfaced with vrep so that the control system can be applied properly. The steps and code used to make this work are as follows.
+
+### Interfacing Matlab with VREP
+  In order to interface Vrep and Matlab, there must first be a set of files pulled from the Vrep folder location and put into the project folder. For this demonstration, Windows 10 64-bit was used. Begin by opening the file location of Vrep (CoppeliaSim) and proceed through the following folders:
+ 
+   CoppeliaSimEdu > programming > remoteApiBindings > matlab > matlab
+
+From here copy the files: remApi.m, remoteApiProto.m and simpleTest.m to the project folder. Backtrack to the remoteApiBindings folder and proceed through the following folders:
+
+   remoteApiBindings > lib > lib > Windows
+
+Add remoteApi.dll to the project folder. From here, open CoppeliaSim and Matlab. Open the scene and the simpleTest.m file. Copy the line simRemoteApi.start(19999) and open the main scene script in CoppeliaSim (Figures 15 & 16).
+
+  ![Fig 15](https://user-images.githubusercontent.com/58873673/71421468-db225480-262f-11ea-8123-be988f9d5893.PNG)
+  
+  ![Fig 16](https://user-images.githubusercontent.com/58873673/71421481-f2614200-262f-11ea-8564-3ee252ce456d.PNG)
+
+  Now create a new .m file and add the following lines to it from simpleTest.m. When the new file is run it will display whether or not it was able to connect to the API. sim.simxGetStringSignal() will be used for the next part of the code and is not mandatory at this time
+
+>sim=remApi('remoteApi'); % using the prototype file (remoteApiProto.m)
+>sim.simxFinish(-1); % just in case, close all opened connections
+>clientID=sim.simxStart('127.0.0.1',19999,true,true,5000,5);
+>
+>if (clientID>-1)
+>        disp('Connected to remote API server');
+>        sim.simxGetStringSignal(clientID,'distance',sim.simx_opmode_streaming);
+>        while(1)
+>
+>        end
+> else
+>            disp('Failed connecting to remote API server');
+>end
+>sim.delete(); % call the destructor!
+>    
+>disp('Program ended');
+
+Run the CoppeliaSim scene, and then while that is under way, run the matlab script. If done correctly, the tex Connected to remote API server should display (Figure 17).
+
+  ![Fig 17](https://user-images.githubusercontent.com/58873673/71421513-20468680-2630-11ea-82f4-de7c4d52c093.PNG)
+  
+  Now add the following lines within the while loop of the Matlab code.
+
+>[errorCode,r_mat]=sim.simxGetStringSignal(clientID,'distance',sim.simx_opmode_buffer);
+>display(r_mat)
+
+These lines, along with the sim.simxGetStringSignal() previously mentioned will stream, in the case of this project, the distance of the ball from the sensor. The Matlab file should now appear similar to the following (Figure 18).
+
+  ![Fig 18](https://user-images.githubusercontent.com/58873673/71421532-42d89f80-2630-11ea-8c59-89e28fd1c43e.PNG)
+  
+  Moving back to CoppeliaSim, go to the top level structure of the hierarchy and add a threaded child code (Figure 19). Add the lines into the code and repeat what was done to check that the remote API was connected. There should now be the distance values displayed in Vrep showing up in Matlab.
+
+  ![Fig 19](https://user-images.githubusercontent.com/58873673/71421561-6e5b8a00-2630-11ea-99bf-7ee05eb3dfa4.PNG)
+  
+  Sensor=sim.getObjectHandle(“”) assigns the object a variable in the code. In this case it is the proximity sensor. Local result,d,dP=sim.checkProximitySensor(Sensor,sim.handle_all) checks the trigger status, distance and distancePoint of the proximity sensor and the object it is detecting. sim.setStringSignal(‘’, ) links the distance variable d to the string distance. This is used by the lines sim.simxGetStringSignal(clientID,'distance',sim.simx_opmode_streaming); and [errorCode,r_mat]=sim.simxGetStringSignal(clientID,'distance',sim.simx_opmode_buffer); in Matlab to get the value stored in the string and convert it to a variable to be displayed in the command window of Matlab.
+  
   
   
 ## Resources
