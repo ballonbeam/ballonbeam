@@ -72,8 +72,15 @@ The transfer function for this circuit shows the relationship between the rotati
   
   ![Fig 10](https://user-images.githubusercontent.com/58873673/70845343-51d67b00-1e02-11ea-875c-ea97f791060c.PNG)
   
+  ### Simulink
+   In order to correctly simulate this project, simulink files were also required. Simulink is a graphical representation of the transfer function and control loops. These simulations were then required to be linked with vrep, a modeling software that creates simulated results of a physical system. The first simulink file, as seen in Figure 11, shows the mathematical model of the transfer function and control loop. 
+   
+   ![Fig 11](https://user-images.githubusercontent.com/58873673/71421257-9a760b80-262e-11ea-9c07-dddd21d84820.png)
+    
+
   
-### Resources
+  
+## Resources
 [1] Ali, A. T., Ahmed, A. M., Almahdi, H. A., Taha, O. A., & Naseraldeen, A. (2017). Design
     and implementation of ball and beam system using pid controller. MAYFEB Journal of
     Electrical and Computer Engineering, 1.
