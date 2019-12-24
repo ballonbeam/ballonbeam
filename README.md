@@ -71,7 +71,7 @@ The transfer function for this circuit shows the relationship between the rotati
   After introducing the derivative term to the system the response shows stability. However, the overshoot was much too large and the settling time must drop. From simple PID controller characteristics, tuning the derivative term to a larger value the overshoot was lowered and the settling time was reduced. Then by increasing the proportional gain slightly the settling time came down to achieve the desired response. The system’s step response can be seen in figure 10.
   
   ![Fig 10](https://user-images.githubusercontent.com/58873673/70845343-51d67b00-1e02-11ea-875c-ea97f791060c.PNG)
-  
+    
   ### Simulink
    In order to correctly simulate this project, simulink files were also required. Simulink is a graphical representation of the transfer function and control loops. These simulations were then required to be linked with vrep, a modeling software that creates simulated results of a physical system. The first simulink file, as seen in Figure 11, shows the mathematical model of the transfer function and control loop. 
    
@@ -83,7 +83,7 @@ The transfer function for this circuit shows the relationship between the rotati
    ![Fig 12](https://user-images.githubusercontent.com/58873673/71421324-08223780-262f-11ea-9b5f-5515c4c17454.png)
    Figure 12: Simulink model of the system 
    
-### VREP
+   ### VREP
   The model built in Vrep is a direct representation of the model that would be built physically. By applying joints, sensors and API’s the model can move directly, simulating real world results with the simulink representations built. Figure 13 shows the model created in Vrep, with the red cylindrical shapes representing the joints of the ball and beam balancer. The small red dot at the end of the balancer simulated the proximity sensor that gives the model feedback. The lever arm was built in vrep to the specifications that were set in the matlab simulation, keeping all the dimensions the same. 
 
   ![Fig 13](https://user-images.githubusercontent.com/58873673/71421364-43246b00-262f-11ea-9716-6de68fb1f7b3.PNG)
@@ -166,4 +166,3 @@ These lines, along with the sim.simxGetStringSignal() previously mentioned will 
     Annual Conference of the IEEE Industrial Electronics Society. IECON 2000. 2000 IEEE
     International Conference on Industrial Electronics, Control and Instrumentation. 21st
     Century Technologies (Vol. 3, pp. 1973-1978). IEEE. 
-
