@@ -81,7 +81,8 @@ The transfer function for this circuit shows the relationship between the rotati
    The second simulink simulation that was created represents the forces and geometric constraints of the real system. However, to model all of the forces can be difficult, so an equation of motion was used directly in the model. This can be seen in figure 12.
    
    ![Fig 12](https://user-images.githubusercontent.com/58873673/71421324-08223780-262f-11ea-9b5f-5515c4c17454.png)
-      Figure 12: Simulink model of the system 
+   
+   Figure 12: Simulink model of the system 
    
 ### VREP
   The model built in Vrep is a direct representation of the model that would be built physically. By applying joints, sensors and API’s the model can move directly, simulating real world results with the simulink representations built. Figure 13 shows the model created in Vrep, with the red cylindrical shapes representing the joints of the ball and beam balancer. The small red dot at the end of the balancer simulated the proximity sensor that gives the model feedback. The lever arm was built in vrep to the specifications that were set in the matlab simulation, keeping all the dimensions the same. 
